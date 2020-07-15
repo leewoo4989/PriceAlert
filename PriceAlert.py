@@ -10,7 +10,7 @@ import json
 
 def pushbullet_message(title, body):
     msg = {"type": "note", "title": title, "body": body}
-    token = config["Pushbullet"]["api_key"]
+    TOKEN = config["Pushbullet"]["api_key"]
     resp = requests.post("https://api.pushbullet.com/v2/pushes",
                          data=json.dumps(msg),
                          headers={"Authorization": "Bearer " + TOKEN,

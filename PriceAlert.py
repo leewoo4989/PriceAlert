@@ -21,7 +21,7 @@ def pushbullet_message(title, body):
         print("Message sent")
 
 
-def grab_prices(urls):
+def grab_prices():
     grabbed_prices = []
     for i in range(len(urls)):
         browser.get(urls[i])
@@ -30,17 +30,18 @@ def grab_prices(urls):
     return grabbed_prices
 
 
-def check_price(urls):
+def check_price():
     while True:
         index = 0
-        updated_prices = grab_prices(urls)
+        updated_prices = grab_prices()
         for i in range(len(updated_prices)):
             if prices[index] != updated_prices[i]:
                 if config["Pushbullet"][enabled] == "true":
                     pushbullet_message("Listing price changed",
                                        "Price of listing {} changed from {} to ${}".format(url, prices[index],
-                                                                                           updated_price))
-                logger.info("Price of listing {} changed from {} to ${}".format(url, prices[index], updated_price))
+                                                                                           updated_prices[i]))
+                logger.info("Price of listing {} changed from {} to ${}".format(url, prices[index], updated_prices[i]))
+            index += 1
         sleep(delay)
 
 
@@ -68,10 +69,10 @@ for line in file.readlines():
     urls.append(data[0])
     xpaths.append(data[1])
 
-prices = grab_prices(urls)
+prices = grab_prices()
 
 logging.basicConfig(filename="pricehistory.log", level=logging.INFO)
 logger = logging.getLogger()
 
-price_thread = threading.Thread(target=checkPrice())
+price_thread = threading.Thread(target=check_price())
 price_thread.start()
